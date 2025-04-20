@@ -45,7 +45,7 @@ namespace FengLog{
                     pos = path.find_first_of("/\\" , index);
                     if(pos == std::string::npos)
                     {
-                        mkdir(path.c_str() , 755);
+                        mkdir(path.c_str() , 0755);
                         return;
                     }
 
@@ -68,7 +68,6 @@ namespace FengLog{
                     mkdir(parent_path.c_str() , 0755);
                     index = pos + 1;
                 }
-
             }
         };
     }
