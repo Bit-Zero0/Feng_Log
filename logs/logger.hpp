@@ -6,6 +6,8 @@
 #include <mutex>
 #include <type_traits>
 #include <unordered_map>
+#include <thread>
+#include <cstring>
 
 
 #include "util.hpp"
@@ -227,7 +229,6 @@ class AsyncLogger : public Logger
 {
 private:
     AsyncLooper::ptr _looper;  // 保存所有创建的 AsyncLooper
-    std::mutex _loopers_mutex;               // 保护 _loopers 的互斥锁
     AsyncType _looper_type;
 
 public:
@@ -243,17 +244,14 @@ public:
         std::cout << LogLevel::to_string(limit_level) << " 异步日志器: " << logger_name << "创建成功...\n";
     }
 
-    ~AsyncLogger()
-    {
-        _looper->stop();
-    }
-
 public:
-    // 将日志信息推送到缓存区
+    //将日志信息推送到缓存区
     void log(const char* data , size_t len) override
     {
         _looper->push(data , len);
     }
+
+
 
     void real_log(Buffer& buffer)
     {
@@ -264,6 +262,7 @@ public:
         }
     }
 };
+
 
 
 class LoggerBuilder{
@@ -336,13 +335,16 @@ public:
             _sinks.push_back(std::make_shared<StdOutSink>());
         }
 
+        Logger::ptr logger;
         if(_logger_type == LoggerType::LOGGER_SYNC)
         {
-            return std::make_shared<SyncLogger>(_logger_name , _formatter  , _sinks , _limit_level);
+            logger =  std::make_shared<SyncLogger>(_logger_name , _formatter  , _sinks , _limit_level);
         }
         else{
-            return std::make_shared<AsyncLogger>(_logger_name , _formatter , _sinks , _limit_level , _looper_type);
+            logger =   std::make_shared<AsyncLogger>(_logger_name , _formatter , _sinks , _limit_level , _looper_type);
         }
+
+        return logger;
     }
 }; 
 

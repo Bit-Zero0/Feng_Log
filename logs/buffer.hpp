@@ -7,8 +7,8 @@
 namespace FengLog{
 
 #define BUFFER_DEFAULT_SIZE (10 * 1024 * 1024)
-#define BUFFER_THRESHOLD (60 * 1024 * 1024)
-#define BUFFER_INCREMENT_SIZE (1 * 1024 * 1024)
+#define BUFFER_THRESHOLD (80 * 1024 * 1024)
+#define BUFFER_INCREMENT_SIZE (10 * 1024 * 1024)
 
 class Buffer{
 

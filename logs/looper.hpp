@@ -22,6 +22,18 @@ public:
     using Task = std::function<void(Buffer&)>;
     using ptr = std::shared_ptr<AsyncLooper>;
 
+private:
+    Task _task;
+    std::atomic<bool> _running;
+    AsyncType _looper_type;
+    Buffer _pro_buffer;
+    Buffer _con_buffer;
+    std::condition_variable _pro_cond;
+    std::condition_variable _con_cond;
+    std::thread _thread;
+    std::mutex _mutex;
+
+public:
     AsyncLooper(const Task& task , AsyncType looper_type = AsyncType::ASYNC_SAFE)
         :_task(task)
         ,_running(true)
@@ -35,6 +47,7 @@ public:
         {
             stop();
         } 
+        //stop();
     }
 
     void stop()
@@ -46,12 +59,17 @@ public:
 
     void push(const char * data , size_t len)
     {
-        std::unique_lock<std::mutex> lock(_mutex);
 
-        // 若缓冲区剩余空间不足，则等待
-        if(_looper_type == AsyncType::ASYNC_SAFE)
-            _pro_cond.wait(lock , [&](){return _pro_buffer.writable_size() >= len;});
-        _pro_buffer.push(data , len);
+        if(_running == false) return;
+
+        {
+            std::unique_lock<std::mutex> lock(_mutex);
+            // 若缓冲区剩余空间不足，则等待
+            if(_looper_type == AsyncType::ASYNC_SAFE)
+                _pro_cond.wait(lock , [&](){return _pro_buffer.writable_size() >= len;});
+            _pro_buffer.push(data , len);
+        }
+        
         _con_cond.notify_one(); //唤醒消费缓存区进行数据处理
     }
 
@@ -69,7 +87,7 @@ private:
                     return;
 
                 // 等待生产缓存区有数据, 或者线程停止
-                _con_cond.wait(lock , [&]{return !_pro_buffer.empty() || !_running;});
+                _con_cond.wait(lock , [&]{return !_running || !_pro_buffer.empty();});
 
                 // 交换生产缓存区与消费缓存区
                 _pro_buffer.swap(_con_buffer);
@@ -78,7 +96,7 @@ private:
                 if(_looper_type == AsyncType::ASYNC_SAFE)
                     _pro_cond.notify_all();
             }
-
+            // 处理消费缓存区_con_buffer中的数据
             _task(_con_buffer);
             _con_buffer.reset();
         }
@@ -86,16 +104,7 @@ private:
     }
 
 
-private:
-    Task _task;
-    std::atomic<bool> _running;
-    AsyncType _looper_type;
-    Buffer _pro_buffer;
-    Buffer _con_buffer;
-    std::condition_variable _pro_cond;
-    std::condition_variable _con_cond;
-    std::thread _thread;
-    std::mutex _mutex;
+
 };
 
 }
