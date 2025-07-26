@@ -20,6 +20,8 @@ FengLog 是一个轻量级、高性能、线程安全的C++日志库。它支持
   - **性能测试**: 附带 `benchmark` 模块，方便测试和比较不同模式下的性能。
 
 ## 📁 项目结构
+
+```
 Feng_Log/
 ├── bench/
 │   ├── bench.cpp           # 性能测试程序，用于评测同步和异步日志在不同负载下的表现
@@ -41,6 +43,7 @@ Feng_Log/
     ├── makefile            # 用于编译 test.cpp 单元测试程序的 makefile 文件
     ├── sinkTest.hpp        # 针对 sink.hpp 的单元测试
     └── test.cpp            # 单元测试的主入口文件，调用并执行所有测试用例
+```
 
 ## 项目架构图
 
