@@ -12,7 +12,7 @@ namespace FengLog{
         size_t _line;
         size_t _time;
         std::thread::id _tid;
-        std::string _logger; // 日志器名
+        std::string _logger; 
         std::string _filename;
         std::string _payload;
         LogLevel::value _level;

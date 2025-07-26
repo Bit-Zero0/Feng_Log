@@ -83,7 +83,7 @@ public:
         _ofs.write(data , len);
         if(!_ofs.good())
         {
-            std::cout << "日志输出失败!!" << std::endl;
+            std::cout << "RollSink log output failed!!" << std::endl;
         }
         _cur_file_size += len;
     }

@@ -179,7 +179,7 @@ protected:
         int len = vasprintf(&buffer , fmt , al);
         if(len < 0)
         {
-            msg = "格式化日志信息失败";
+            msg = "Failed to format log information";
         }
         else
         {
@@ -205,7 +205,7 @@ public:
             LogLevel::value limit_level = LogLevel::value::DEBUG) 
             : Logger(logger_name , formatter , sinks , limit_level)
     {
-         std::cout << LogLevel::to_string(limit_level) << " 同步日志器: " << logger_name << "创建成功...\n";
+         std::cout << LogLevel::to_string(limit_level) << " sync logger: " << logger_name << "created successfully \n";
     }
 
 private:
@@ -241,7 +241,7 @@ public:
             ,_looper(std::make_shared<AsyncLooper>(std::bind(&AsyncLogger::real_log , this, std::placeholders::_1)))
             ,_looper_type(looper_type)
     {
-        std::cout << LogLevel::to_string(limit_level) << " 异步日志器: " << logger_name << "创建成功...\n";
+        std::cout << LogLevel::to_string(limit_level) << " async logger: " << logger_name << "created successfully \n";
     }
 
 public:

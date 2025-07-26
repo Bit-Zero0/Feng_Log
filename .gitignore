@@ -1,0 +1,5 @@
+.vscode/
+
+./bench/bench
+
+./test/test.exe

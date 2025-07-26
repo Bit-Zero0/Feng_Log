@@ -216,7 +216,7 @@ private:
             if (pos < _pattern.size() && isalpha(_pattern[pos])) {
                 format_key = _pattern[pos];//保存格式化字符
             }else {
-                std::cout << &_pattern[pos-1] << "位置附近格式错误！\n";
+                std::cout << &_pattern[pos-1] << "format character error\n";
                 return false;
             }
 
@@ -238,7 +238,7 @@ private:
             format_val.clear();
         }
         if (sub_format_error) {
-            std::cout << "{}对应出错\n";
+            std::cout << "{} Corresponding error\n";
             return false;
         }
         if (string_row.empty() == false) arry.push_back(std::make_tuple(string_row, "", 0));
@@ -250,7 +250,7 @@ private:
             }else {
                 FormatItem::ptr fi = createFormatItem(std::get<0>(it), std::get<1>(it));
                 if (fi.get() == nullptr) {
-                    std::cout << "没有对应的格式化字符: %" <<  std::get<0>(it) << std::endl;
+                    std::cout << "No corresponding formatting character: %" <<  std::get<0>(it) << std::endl;
                     return false;
                 }
                 _items.push_back(fi);
