@@ -1,5 +1,6 @@
 .vscode/
 
-./bench/bench
+/bench/bench
+/bench/async_logger.log
 
 ./test/test.exe
