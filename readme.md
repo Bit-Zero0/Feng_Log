@@ -44,7 +44,7 @@ Feng_Log/
 
 ## 项目架构图
 
-![项目架构图](asserts/FengLog_Flowchart.drawio)
+![项目架构图](asserts/FengLog_Flowchart.svg)
 
 
 ## 🛠️ 核心组件解析
